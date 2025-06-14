@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en" class="no-js">
 
@@ -21,6 +23,331 @@
     <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
     <link rel="manifest" href="site.webmanifest">
 </head>
+<style>
+   * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #000;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        /* Particles untuk efek visual */
+        .vihara-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .vihara-particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: rgba(255, 215, 0, 0.7);
+            border-radius: 50%;
+            animation: viharaFloat 25s infinite linear;
+            box-shadow: 0 0 6px rgba(255, 215, 0, 0.5);
+        }
+
+        .vihara-lotus-petal {
+            position: absolute;
+            width: 8px;
+            height: 15px;
+            background: rgba(255, 182, 193, 0.6);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            animation: viharaFloatPetal 30s infinite linear;
+        }
+
+        @keyframes viharaFloat {
+            0% {
+                transform: translateY(100vh) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(100px);
+                opacity: 0;
+            }
+        }
+
+        @keyframes viharaFloatPetal {
+            0% {
+                transform: translateY(100vh) translateX(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(150px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .vihara-video-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, 
+        rgba(218, 165, 32, 0.1) 0%, 
+        rgba(139, 69, 19, 0.15) 25%,
+        rgba(160, 82, 45, 0.1) 50%,
+        rgba(205, 133, 63, 0.15) 75%,
+        rgba(218, 165, 32, 0.1) 100%
+    );
+    backdrop-filter: blur(20px) saturate(150%);
+    -webkit-backdrop-filter: blur(20px) saturate(150%);
+    z-index: 1000;
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.vihara-video-modal.active {
+    display: flex;
+    opacity: 1;
+    align-items: center;
+    justify-content: center;
+}
+
+.vihara-video-modal__content {
+    position: relative;
+    width: 100%;
+    max-width: 1000px;
+    aspect-ratio: 16/9;
+    background: linear-gradient(145deg, 
+        rgba(0, 0, 0, 0.9) 0%, 
+        rgba(20, 20, 20, 0.95) 100%
+    );
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 
+        0 25px 80px rgba(0, 0, 0, 0.3),
+        0 10px 40px rgba(218, 165, 32, 0.2),
+        0 0 0 1px rgba(255, 215, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    animation: viharaModalSlideIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: center;
+}
+
+@keyframes viharaModalSlideIn {
+    0% {
+        transform: scale(0.7) translateY(100px) rotateX(15deg);
+        opacity: 0;
+        filter: blur(10px);
+    }
+    50% {
+        transform: scale(0.9) translateY(20px) rotateX(5deg);
+        opacity: 0.8;
+        filter: blur(2px);
+    }
+    100% {
+        transform: scale(1) translateY(0) rotateX(0deg);
+        opacity: 1;
+        filter: blur(0px);
+    }
+}
+
+.vihara-video-modal__close {
+    position: absolute;
+    top: -60px;
+    right: 0;
+    background: linear-gradient(135deg, 
+        rgba(218, 165, 32, 0.9) 0%, 
+        rgba(160, 82, 45, 0.9) 100%
+    );
+    border: 2px solid rgba(255, 215, 0, 0.8);
+    color: #FFFFFF;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: bold;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.3),
+        0 4px 16px rgba(218, 165, 32, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.vihara-video-modal__close:hover {
+    background: linear-gradient(135deg, 
+        rgba(255, 215, 0, 0.95) 0%, 
+        rgba(218, 165, 32, 0.95) 100%
+    );
+    border-color: rgba(255, 215, 0, 1);
+    transform: scale(1.15) rotate(90deg);
+    box-shadow: 
+        0 12px 40px rgba(0, 0, 0, 0.4),
+        0 8px 24px rgba(255, 215, 0, 0.6),
+        0 0 30px rgba(255, 215, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.vihara-video-modal__close:active {
+    transform: scale(1.05) rotate(90deg);
+}
+
+.vihara-video-modal iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 20px;
+}
+
+.vihara-video-modal__loader {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px;
+    height: 60px;
+    border: 4px solid rgba(255, 215, 0, 0.3);
+    border-top: 4px solid #DAA520;
+    border-right: 4px solid #FFD700;
+    border-radius: 50%;
+    animation: viharaSpin 1.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    box-shadow: 
+        0 0 20px rgba(218, 165, 32, 0.3),
+        inset 0 0 10px rgba(255, 215, 0, 0.1);
+}
+
+@keyframes viharaSpin {
+    0% { 
+        transform: translate(-50%, -50%) rotate(0deg) scale(1);
+    }
+    50% { 
+        transform: translate(-50%, -50%) rotate(180deg) scale(1.1);
+    }
+    100% { 
+        transform: translate(-50%, -50%) rotate(360deg) scale(1);
+    }
+}
+
+/* Enhanced Responsive Design */
+@media (max-width: 1200px) {
+    .vihara-video-modal {
+        padding: 15px;
+    }
+    
+    .vihara-video-modal__content {
+        max-width: 95%;
+    }
+}
+
+@media (max-width: 768px) {
+    .vihara-video-modal {
+        padding: 10px;
+    }
+    
+    .vihara-video-modal__content {
+        width: 100%;
+        border-radius: 15px;
+        aspect-ratio: 16/10; /* Slightly taller for mobile */
+    }
+
+    .vihara-video-modal__close {
+        top: -50px;
+        right: 5px;
+        width: 44px;
+        height: 44px;
+        font-size: 20px;
+    }
+    
+    .vihara-video-modal__loader {
+        width: 50px;
+        height: 50px;
+        border-width: 3px;
+    }
+}
+
+@media (max-width: 480px) {
+    .vihara-video-modal {
+        padding: 8px;
+    }
+    
+    .vihara-video-modal__content {
+        border-radius: 12px;
+        aspect-ratio: 16/11; /* Even taller for small screens */
+    }
+
+    .vihara-video-modal__close {
+        top: -45px;
+        right: 0;
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+    }
+}
+
+@media (max-height: 600px) and (orientation: landscape) {
+    .vihara-video-modal {
+        padding: 5px;
+    }
+    
+    .vihara-video-modal__content {
+        width: 95%;
+        max-width: none;
+        height: 90vh;
+        aspect-ratio: auto;
+    }
+    
+    .vihara-video-modal__close {
+        top: -40px;
+    }
+}
+
+/* Additional enhancements */
+.vihara-video-modal__content::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, 
+        transparent 0%, 
+        rgba(255, 215, 0, 0.05) 50%, 
+        transparent 100%
+    );
+    pointer-events: none;
+    z-index: 1;
+    border-radius: 20px;
+}
+
+.vihara-video-modal iframe {
+    position: relative;
+    z-index: 2;
+}
+</style>
 
 <body id="top">
     <!-- Preloader -->
@@ -72,23 +399,24 @@
         <!-- Main Content -->
         <section id="content" class="s-content">
             <!-- Intro Section -->
-            <section id="intro" class="s-intro target-section">
+            <section id="intro" class="s-intro target-section" style="position: relative; height: 100vh;">
+                
+                <!-- Particles Container -->
+                <div class="vihara-particles" id="viharaParticles"></div>
+                
                 <div class="s-intro__bg"></div>
-                <div class="row s-intro__content">
+                <div class="row s-intro__content" style="position: relative; z-index: 2; height: 100%; display: flex; align-items: center;">
                     <div class="s-intro__content-bg"></div>
-                    <div class="column lg-12 s-intro__content-inner">
-                        <h1 class="s-intro__content-title">
+                    <div class="column lg-12 s-intro__content-inner" style="max-width: 800px; padding: 0 20px;">
+                        <h1 class="s-intro__content-title" style="font-size: clamp(2.5rem, 8vw, 5rem); font-weight: 700; line-height: 1.1; margin-bottom: 2rem; color: white;">
                             Temukan Kedamaian <br>
                             dan Keindahan <br>
                             di Vihara Watugong.
                         </h1>
-                        <div class="s-intro__content-buttons">
-                            <a href="#sejarah" class="btn btn--stroke s-intro__content-btn smoothscroll">Sejarah Vihara
-                                Watugong</a>
-                            <a href="https://player.vimeo.com/video/14592941?color=f26522&title=0&byline=0&portrait=0"
-                                class="s-intro__content-video-btn">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    style="fill: rgba(0, 0, 0, 1);transform:;msFilter:;">
+                        <div class="s-intro__content-buttons" style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+                            <a href="#sejarah" class="btn btn--stroke s-intro__content-btn" style="padding: 12px 30px; border-radius: 50px; text-decoration: none; font-weight: 600; background: linear-gradient(135deg, #B8860B 0%, #DAA520 50%, #FFD700 100%); color: white; border: 2px solid rgba(255, 215, 0, 0.3); transition: all 0.3s ease;">SEJARAH VIHARA WATUGONG</a>
+                            <a href="javascript:void(0)" class="s-intro__content-video-btn" onclick="openViharaVideoModal()" style="display: inline-flex; align-items: center; justify-content: center; width: 60px; height: 60px; background: rgba(139, 69, 19, 0.8); border: 2px solid rgba(255, 215, 0, 0.6); border-radius: 50%; color: #FFD700; text-decoration: none; transition: all 0.3s ease; backdrop-filter: blur(10px);">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: currentColor;">
                                     <path d="M7 6v12l10-6z"></path>
                                 </svg>
                             </a>
@@ -101,131 +429,127 @@
                     </a>
                 </div>
             </section>
-
+        </section>
+    
+        <!-- Video Modal -->
+       <!-- Enhanced Video Modal HTML -->
+<div class="vihara-video-modal" id="viharaVideoModal">
+    <div class="vihara-video-modal__content">
+        <button class="vihara-video-modal__close" onclick="closeViharaVideoModal()" aria-label="Close video">&times;</button>
+        <div class="vihara-video-modal__loader" id="viharaVideoLoader"></div>
+        <iframe id="viharaVideoIframe" src="" allowfullscreen title="Vihara Video"></iframe>
+    </div>
+</div>
+    
+            <!-- Floating Religious Elements -->
+            <div class="wg-floating-element">
+                <i class="fas fa-dharmachakra" style="font-size: 3rem;"></i>
+            </div>
+            <div class="wg-floating-element">
+                <i class="fas fa-peace" style="font-size: 2.5rem;"></i>
+            </div>
+            <div class="wg-floating-element">
+                <i class="fas fa-lotus" style="font-size: 2rem;"></i>
+            </div>
             <!-- History Section -->
-           <section id="sejarah" class="wg-about-section">
-               <div class="wg-container">
-                   <!-- Header Section -->
-                   <div class="wg-header">
-                       <div class="wg-section-number">01</div>
-                       <h2 class="wg-pretitle">Sejarah Kami</h2>
-                       <div class="wg-header-content">
-                           <div class="wg-header-title">
-                               <h2>Perjalanan Vihara Watugong sebagai pusat pengembangan Buddhadhamma di Indonesia</h2>
-                           </div>
-                           <div class="wg-header-desc">
-                               <h6>Vihara Watugong yang awalnya bernama Vihara Buddha Gaya memiliki sejarah panjang sejak
-                                   tahun 1955 dan telah menjadi simbol penting dalam perkembangan agama Buddha di
-                                   Indonesia.</h6>
-                           </div>
-                       </div>
-                   </div>
-
-                   <!-- Timeline Section -->
-                   <div class="wg-timeline">
-                       <div class="wg-timeline-item">
-                           <div class="wg-timeline-content">
-                               <h3>Awal Mula</h3>
-                               <div class="wg-timeline-year">1955</div>
-                               <p>Tahun 1955 seorang hartawan bernama Goei Thwan Ling (Sutopo) mempersembahkan tanah
-                                   miliknya untuk digunakan sebagai pusat pengembangan Buddhadhamma. Tempat itu yang
-                                   kemudian diberi nama Vihara Buddha Gaya dan pada 19 Oktober 1955 didirikan yayasan
-                                   Buddha Gaya untuk menaungi aktivitas vihara.</p>
-                           </div>
-                       </div>
-
-                       <div class="wg-timeline-item">
-                           <div class="wg-timeline-content">
-                               <h3>Nama "Watugong"</h3>
-                               <div class="wg-timeline-year">1960</div>
-                               <p>Masyarakat mengkaitkan vihara dengan keberadaan Watu Gong yang ada di sekitar vihara.
-                                   Pada kemudian hari, umat menyebut nama lain Vihara Buddha Gaya sebagai Vihara Watu
-                                   Gong karena di dalamnya terdapat batu antik berbentuk gong. Dari sinilah seolah
-                                   menjadi spirit tersendiri dimulainya pembabaran agama Buddha di tanah air.</p>
-                           </div>
-                           <div class="wg-timeline-image">
-                               <img src="images/watugong.jpg" alt="Batu Gong Antik">
-                           </div>
-                       </div>
-
-                       <div class="wg-timeline-item">
-                           <div class="wg-timeline-image">
-                               <img src="images/vihara-modern.jpg" alt="Vihara Buddha Gaya Modern">
-                           </div>
-                           <div class="wg-timeline-content">
-                               <h3>Perkembangan Modern</h3>
-                               <div class="wg-timeline-year">2000</div>
-                               <p>Sesudah mengalami pasang surut organisasi dan pembinaan, sejak tahun 2000 Vihara
-                                   Buddha Gaya berkembang menjadi sebuah Buddhist Centre yang berfokus untuk menjadi
-                                   tempat latihan umat dalam mempraktikan dhamma. Ditambah dengan berdirinya beberapa
-                                   bangunan dan ornamen lain semakin mempercantik Vihara Buddha Gaya.</p>
-                           </div>
-                       </div>
-                   </div>
-
-                   <!-- Features Grid -->
-                   <div class="wg-features-grid">
-                       <div class="wg-feature-item">
-                           <div class="wg-feature-icon">
-                               <i class="fa fa-landmark"></i>
-                           </div>
-                           <h3>Warisan Budaya</h3>
-                           <p>Vihara ini bukan hanya menjadi tempat ibadah umat Buddha, tetapi menjadi milik masyarakat
-                               dan pemerintah, sebagai aset berharga dalam pluralisme bangsa dan negara Republik
-                               Indonesia.</p>
-                       </div>
-
-                       <div class="wg-feature-item">
-                           <div class="wg-feature-icon">
-                               <i class="fa fa-pray"></i>
-                           </div>
-                           <h3>Tempat Spiritual</h3>
-                           <p>Sebagai tempat praktik Dhamma, Vihara Watugong menyediakan berbagai kegiatan spiritual
-                               untuk umat Buddha dan terbuka bagi masyarakat umum yang ingin mempelajari ajaran Buddha
-                               serta mengalami kedamaian yang ditawarkan oleh tempat ini.</p>
-                       </div>
-
-                       <div class="wg-feature-item">
-                           <div class="wg-feature-icon">
-                               <i class="fa fa-building"></i>
-                           </div>
-                           <h3>Arsitektur Menawan</h3>
-                           <p>Dengan arsitektur yang memadukan unsur Tiongkok dan lokal, Vihara Watugong memberikan
-                               pengalaman visual yang menarik. Ornamen dan struktur bangunan mencerminkan filosofi
-                               Buddha serta nilai-nilai budaya yang dijunjung tinggi.</p>
-                       </div>
-
-                       <div class="wg-feature-item">
-                           <div class="wg-feature-icon">
-                               <i class="fa fa-map-marked-alt"></i>
-                           </div>
-                           <h3>Destinasi Wisata</h3>
-                           <p>Selain sebagai tempat ibadah, Vihara Watugong juga menjadi destinasi wisata religi yang
-                               menarik. Pengunjung dapat menikmati keindahan bangunan, mempelajari sejarah Buddha, dan
-                               merasakan kedamaian yang ditawarkan di lingkungan vihara.</p>
-                       </div>
-                   </div>
-               </div>
-           </section>
+            <section id="sejarah" class="wg-about-section">
+                <div class="wg-container">
+                    <!-- Enhanced Header Section -->
+                    <div class="wg-header">
+                        <div class="wg-section-number">01</div>
+                        <h2 class="wg-pretitle" style="margin-top: -0.8px;">Sejarah Kami</h2>
+                        <div class="wg-header-content">
+                            <div class="wg-header-title">
+                                <h2>Perjalanan Vihara Watugong sebagai pusat pengembangan Buddhadhamma di Indonesia</h2>
+                            </div>
+                            <div class="wg-header-desc">
+                                <h6>Vihara Watugong yang awalnya bernama Vihara Buddha Gaya memiliki sejarah panjang sejak tahun 1955 dan telah menjadi simbol penting dalam 
+                                    perkembangan agama Buddha di Indonesia.</h6>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <!-- Enhanced Timeline Section -->
+                    <div class="wg-timeline">
+                        <div class="wg-timeline-item wg-reveal">
+                            <div class="wg-timeline-content">
+                                <h3>Awal Mula</h3>
+                                <div class="wg-timeline-year">1955</div>
+                                <p>Tahun 1955 seorang hartawan bernama Goei Thwan Ling (Sutopo) mempersembahkan tanah miliknya untuk digunakan sebagai pusat pengembangan 
+                                    Buddhadhamma. Tempat itu yang kemudian diberi nama Vihara Buddha Gaya dan pada 19 Oktober 1955 didirikan yayasan Buddha Gaya untuk menaungi 
+                                    aktivitas vihara.</p>
+                            </div>
+                            <div class="wg-timeline-image">
+                                <img src="images/asoka.jpg" alt="Awal Mula Vihara">
+                            </div>
+                        </div>
+        
+                        <div class="wg-timeline-item wg-reveal">
+                            <div class="wg-timeline-image">
+                                <img src="images/watugong.JPG" alt="Batu Gong Antik">
+                            </div>
+                            <div class="wg-timeline-content">
+                                <h3>Nama "Watugong"</h3>
+                                <div class="wg-timeline-year">1960</div>
+                                <p>Masyarakat mengkaitkan vihara dengan keberadaan Watu Gong yang ada di sekitar vihara. Pada kemudian hari, umat menyebut nama lain Vihara Buddha Gaya sebagai Vihara Watu Gong karena di dalamnya terdapat batu antik berbentuk gong. Dari sinilah seolah menjadi spirit tersendiri dimulainya pembabaran agama Buddha di tanah air.</p>
+                            </div>
+                        </div>
+        
+                        <div class="wg-timeline-item wg-reveal">
+                            <div class="wg-timeline-content">
+                                <h3>Perkembangan Modern</h3>
+                                <div class="wg-timeline-year">2000</div>
+                                <p>Sesudah mengalami pasang surut organisasi dan pembinaan, sejak tahun 2000 Vihara Buddha Gaya berkembang menjadi sebuah Buddhist Centre yang berfokus untuk menjadi tempat latihan umat dalam mempraktikan dhamma. Ditambah dengan berdirinya beberapa bangunan dan ornamen lain semakin mempercantik Vihara Buddha Gaya.</p>
+                            </div>
+                            <div class="wg-timeline-image">
+                                <img src="images/sanchi.JPG" alt="Vihara Modern">
+                            </div>
+                        </div>
+                    </div>
+        
+                    <!-- Enhanced Features Grid -->
+                    <div class="wg-features-grid">
+                        <div class="wg-feature-item wg-reveal">
+                            <div class="wg-feature-icon">
+                                <i class="fa fa-landmark"></i>
+                            </div>
+                            <h3>Warisan Budaya</h3>
+                            <p>Vihara ini bukan hanya menjadi tempat ibadah umat Buddha, tetapi menjadi milik masyarakat dan pemerintah, sebagai aset berharga dalam pluralisme bangsa dan negara Republik Indonesia.</p>
+                        </div>
+        
+                        <div class="wg-feature-item wg-reveal">
+                            <div class="wg-feature-icon">
+                                <i class="fa fa-pray"></i>
+                            </div>
+                            <h3>Tempat Spiritual</h3>
+                            <p>Sebagai tempat praktik Dhamma, Vihara Watugong menyediakan berbagai kegiatan spiritual untuk umat Buddha dan terbuka bagi masyarakat umum yang ingin mempelajari ajaran Buddha serta mengalami kedamaian yang ditawarkan oleh tempat ini.</p>
+                        </div>
+        
+                        <div class="wg-feature-item wg-reveal">
+                            <div class="wg-feature-icon">
+                                <i class="fa fa-building"></i>
+                            </div>
+                            <h3>Arsitektur Menawan</h3>
+                            <p>Dengan arsitektur yang memadukan unsur Tiongkok dan lokal, Vihara Watugong memberikan pengalaman visual yang menarik. Ornamen dan struktur bangunan mencerminkan filosofi Buddha serta nilai-nilai budaya yang dijunjung tinggi.</p>
+                        </div>
+        
+                        <div class="wg-feature-item wg-reveal">
+                            <div class="wg-feature-icon">
+                                <i class="fa fa-map-marked-alt"></i>
+                            </div>
+                            <h3>Destinasi Wisata</h3>
+                            <p>Selain sebagai tempat ibadah, Vihara Watugong juga menjadi destinasi wisata religi yang menarik. Pengunjung dapat menikmati keindahan bangunan, mempelajari sejarah Buddha, dan merasakan kedamaian yang ditawarkan di lingkungan vihara.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
            <!-- Facilities Section -->
            <section id="fasilitas" class="vw-fasilitas target-section">
-               <div class="vw-section-header" data-num="02">
-                   <h3 class="vw-pretitle">Fasilitas Vihara Watugong</h3>
-                   <div class="vw-header-primary">
-                       <h2 class="vw-title">
-                           Menjelajahi Pesona dan Makna di Vihara Watugong
-                       </h2>
-                   </div>
-                   <div class="vw-header-secondary">
-                       <p class="vw-desc">
-                           Vihara Watugong berpadu di tengah harmoni alam dan budaya, menawarkan pengalaman spiritual
-                           yang memperkaya jiwa. Setiap sudut vihara mengandung makna filosofis mendalam yang
-                           mencerminkan ajaran Buddha.
-                       </p>
-                   </div>
-               </div>
-
+            <div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                <div class="wg-section-number">02</div>
+                <h2 class="wg-pretitle" style="margin-top: -0.8px;">Fasilitas Vihara Watugong</h2>
+            </div>
                <!-- Map and Facilities Container -->
                <div class="vw-map-facilities-container">
                    <!-- Interactive Map -->
@@ -274,9 +598,9 @@
                                <div class="vw-tooltip">Bangunan Sivali</div>
                            </div>
 
-                           <div class="vw-map-marker" style="top: 72.8%; left: 55%;" data-id="kuti-bhikkhu">
+                           <div class="vw-map-marker" style="top: 72.8%; left: 55%;" data-id="r_berdiri">
                                <div class="vw-marker white">9</div>
-                               <div class="vw-tooltip">Kuti Bhikkhu</div>
+                               <div class="vw-tooltip">Rencana Buddha Berdiri</div>
                            </div>
 
                            <div class="vw-map-marker" style="top: 44.8%; left: 74.8%;" data-id="dhammasala">
@@ -352,9 +676,9 @@
                                    <span class="vw-facility-name">Bangunan Sivali</span>
                                    <span class="vw-facility-icon"><i class="fas fa-chevron-right"></i></span>
                                </li>
-                               <li class="vw-facility-item" data-id="kuti-bhikkhu">
-                                   <span class="vw-facility-number">9</span>
-                                   <span class="vw-facility-name">Kuti Bhikkhu</span>
+                               <li class="vw-facility-item" data-id="r_berdiri">
+                                   <span class="vw-facility-number white">9</span>
+                                   <span class="vw-facility-name">Rencana Buddha Berdiri</span>
                                    <span class="vw-facility-icon"><i class="fas fa-chevron-right"></i></span>
                                </li>
                                <li class="vw-facility-item" data-id="dhammasala">
@@ -374,7 +698,7 @@
                                </li>
                                <li class="vw-facility-item" data-id="meditasi">
                                    <span class="vw-facility-number white">13</span>
-                                   <span class="vw-facility-name">Kuti Meditasi</span>
+                                   <span class="vw-facility-name">Kuti Samadhi</span>
                                    <span class="vw-facility-icon"><i class="fas fa-chevron-right"></i></span>
                                </li>
                                <li class="vw-facility-item" data-id="bhikkhu">
@@ -390,373 +714,834 @@
 
                <!-- Modal for Facility Details (Single Example) -->
                <div id="watu-gong-modal" class="vw-modal">
-                   <div class="vw-modal-content">
-                       <span class="vw-close" onclick="closeModal('watu-gong')">&times;</span>
-                       <div class="vw-modal-header">
-                           <div class="vw-modal-title">
-                               <span class="vw-modal-number blue">1</span>
-                               <h2>Watu Gong</h2>
-                           </div>
-                       </div>
-                       <div class="vw-modal-body">
-                           <div class="vw-modal-image-container">
-                               <img src="images/watugong.JPG" alt="Watu Gong" class="vw-modal-img">
-                           </div>
-                           <div class="vw-modal-description">
-                               <p>
-                                   Watu Gong merupakan batu alam asli yang berbentuk menyerupai Gong (Alat musik
-                                   Tradisional). Batu alam ini memang sebelumnya sudah berada di area sekitar vihara
-                                   sekarang, awalnya batu tersebut berada dipinggir Jl. Perintis Kemerdekaan dan
-                                   ditemukan
-                                   saat pelebaran jalan Semarang - Solo, kemudian mengalami perpindahan beberapa kali
-                                   hingga akhirnya diletakan ditempat sekarang.
-                               </p>
-                               <p>
-                                   Keunikan bentuk batu inilah yang menjadi salah satu daya tarik utama dan menjadi asal
-                                   nama vihara ini.
-                                   Watu Gong dianggap memiliki nilai spiritual dan historis bagi masyarakat setempat.
-                               </p>
-                           </div>
-                       </div>
-                   </div>
-               </div>
-               <div id="gerbang-sanchi-modal" class="vw-modal">
-                   <div class="vw-modal-content">
-                       <span class="vw-close" onclick="closeModal('gerbang-sanchi')">&times;</span>
-                       <div class="vw-modal-header">
-                           <div class="vw-modal-title">
-                               <span class="vw-modal-number yellow">2</span>
-                               <h2>Gerbang Sanchi</h2>
-                           </div>
-                       </div>
-                       <div class="vw-modal-body">
-                           <div class="vw-modal-image-container">
-                               <img src="images/sanchi.JPG" alt="Sanchi" class="vw-modal-img">
-                           </div>
-                           <div class="vw-modal-description">
-                               <p>
-                                  Gerbang Sanchi bermakna sebagai penghormatan
-                                  sebelum memasuki vihara. Gerbang Sanchi ini
-                                  merupakan replika dari gapura yang berada di depan
-                                  Stupa Sanchi, India.
-                               </p>
-                           </div>
-                       </div>
-                   </div>
-               </div>
-               <div id="plaza-borobudur-modal" class="vw-modal">
-                   <div class="vw-modal-content">
-                       <span class="vw-close" onclick="closeModal('plaza-borobudur')">&times;</span>
-                       <div class="vw-modal-header">
-                           <div class="vw-modal-title">
-                               <span class="vw-modal-number yellow">3</span>
-                               <h2>Plaza Borobudur</h2>
-                           </div>
-                       </div>
-                       <div class="vw-modal-body">
-                           <div class="vw-modal-image-container">
-                               <img src="images/plaza-borobudur.png" alt="Plaza" class="vw-modal-img">
-                           </div>
-                           <div class="vw-modal-description">
-                               <p>
-                                   Plaza Borobudur merupakan lapangan terbuka yang
-                                   terletak di samping Dhammasala. Jika dilihat dari udara,
-                                   lapangan ini berbentuk menyerupai mandala Borobudur.
-                                   Plaza Borobudur juga berfungsi sebagai tempat untuk
-                                   kegiatan keagamaan agama Buddha di Vihara
-                                   Watugong.
-                               </p>
-                           </div>
-                       </div>
-                   </div>
-               </div>
-                <div id="asoka-modal" class="vw-modal">
-                    <div class="vw-modal-content">
-                        <span class="vw-close" onclick="closeModal('asoka')">&times;</span>
-                        <div class="vw-modal-header">
-                            <div class="vw-modal-title">
-                                <span class="vw-modal-number white">4</span>
-                                <h2>Tugu dan Prasasti Asoka</h2>
+                <div class="vw-modal-content">
+                    <span class="vw-close" onclick="closeModal('watu-gong')">&times;</span>
+                    <div class="vw-modal-header">
+                        <div class="vw-modal-title">
+                            <span class="vw-modal-number blue">1</span>
+                            <h2>Watu Gong</h2>
+                        </div>
+                    </div>
+                    <div class="vw-modal-body">
+                        <!-- Enhanced Image Gallery -->
+                        <div class="vw-modal-image-gallery">
+                            <div class="vw-image-carousel">
+                                <div class="vw-carousel-container">
+                                    <div class="vw-carousel-track" id="carousel-track-watu-gong">
+                                        <div class="vw-carousel-slide">
+                                            <img src="images/watugong.JPG" alt="Watu Gong - Tampak Depan" class="vw-modal-img">
+                                        </div>
+                                        <!-- <div class="vw-carousel-slide">
+                                            <img src="images/watugong-detail.JPG" alt="Watu Gong - Detail Tekstur" class="vw-modal-img">
+                                        </div>
+                                        <div class="vw-carousel-slide">
+                                            <img src="images/watugong-area.JPG" alt="Watu Gong - Area Sekitar" class="vw-modal-img">
+                                        </div> -->
+                                    </div>
+                                    <!-- Navigation Arrows -->
+                                    <!-- <button class="vw-carousel-nav vw-carousel-prev" onclick="prevSlide('watu-gong')">❮</button>
+                                    <button class="vw-carousel-nav vw-carousel-next" onclick="nextSlide('watu-gong')">❯</button> -->
+                                </div>
+                                <!-- Image Indicators -->
+                                <!-- <div class="vw-carousel-indicators" id="indicators-watu-gong">
+                                    <span class="vw-indicator active" onclick="currentSlide('watu-gong', 1)"></span>
+                                    <span class="vw-indicator" onclick="currentSlide('watu-gong', 2)"></span>
+                                    <span class="vw-indicator" onclick="currentSlide('watu-gong', 3)"></span>
+                                </div> -->
                             </div>
                         </div>
-                        <div class="vw-modal-body">
-                            <div class="vw-modal-image-container">
-                                <img src="images/asoka.jpg" alt="Asoka" class="vw-modal-img">
-                            </div>
-                            <div class="vw-modal-description">
-                                <p>
-                                    Tugu Asoka merupaka tiruan atau pattirupakha dari
-                                    Prasasti Maklumat Raja Asoka yang terebar di 34
-                                    daerah di seluruh pelosok India, Nepal, Pakistan dan
-                                    Afghanistan
-                                </p>
-                                <p>Prasasti ini berisi Maklumat Raja Asoka, isi dari
-                                    maklumat Raja Asoka tersebut mengajarkan bagaimana
-                                    toleransi dalam hidup beragama.
-                                    “Jangan membanggakan agama sendiri dengan mencela
-                                    agama lain. Dengan menghargai agama lain, maka akan
-                                    bermanfaat bagi agama sendiri dan agama lain. Bila
-                                    berbuat sebaliknya, akan merugikan agama sendiri dan
-                                    agama lain.” (Raja Asoka : 269 - 232 SM)
-                                </p>
-                            </div>
+                        
+                        <!-- Enhanced Description -->
+                        <div class="vw-modal-description">
+                            <p>
+                                Watugong, sebuah batu granit yang memiliki kemiripan dengan gong, alat musik tradisional Jawa. Batu ini awalnya ditemukan secara tidak sengaja oleh para pekerja proyek yang terlibat dalam pembangunan jalan di sepanjang rute antara Semarang dan Solo, di dekat vihara. 
+                            </p>
+                            
+                            <p>
+                                Bentuknya yang khas dan memiliki kesamaan budaya dengan cepat menarik perhatian, sehingga batu tersebut ditetapkan sebagai landmark setempat. Batu yang oleh penduduk setempat mulai disebut sebagai "Watu Gong" (bahasa Jawa yang berarti "batu berbentuk gong") ini awalnya diletakkan di dekat pohon beringin besar di depan kompleks wihara.
+                            </p>
+                            
+                            <blockquote>
+                                "Seperti bunyi gong yang menggetarkan hati, Watu Gong mengingatkan kita akan pentingnya kebijaksanaan dalam menjalani kehidupan spiritual."
+                            </blockquote>
+                            
+                            <p>
+                                Namun, untuk meningkatkan visibilitas dan kehadiran simbolisnya, batu ini kemudian dipindahkan ke posisi yang lebih dekat dengan gerbang masuk Wihara Watugong. Di lokasi ini, pohon beringin tersebut kini berfungsi sebagai simbol penyambutan bagi para pengunjung.
+                            </p>
                         </div>
+                    </div>
+                    <div class="vw-modal-footer">
+                        <button class="vw-nav-btn prev" onclick="previousFacility()">
+                            <i>←</i> Sebelumnya
+                        </button>
+                        <button class="vw-nav-btn next" onclick="nextFacility()">
+                            Selanjutnya <i>→</i>
+                        </button>
                     </div>
                 </div>
-                <div id="bodhi-modal" class="vw-modal">
-                    <div class="vw-modal-content">
-                        <span class="vw-close" onclick="closeModal('bodhi')">&times;</span>
-                        <div class="vw-modal-header">
-                            <div class="vw-modal-title">
-                                <span class="vw-modal-number blue">5</span>
-                                <h2>Pohon Bodhi</h2>
+            </div>
+            <div id="gerbang-sanchi-modal" class="vw-modal">
+                <div class="vw-modal-content">
+                    <span class="vw-close" onclick="closeModal('gerbang-sanchi')">&times;</span>
+                    <div class="vw-modal-header">
+                        <div class="vw-modal-title">
+                            <span class="vw-modal-number yellow">2</span>
+                            <h2>Gerbang Sanchi</h2>
+                        </div>
+                    </div>
+                    <div class="vw-modal-body">
+                        <!-- Enhanced Image Gallery -->
+                        <div class="vw-modal-image-gallery">
+                            <div class="vw-image-carousel">
+                                <div class="vw-carousel-container">
+                                    <div class="vw-carousel-track" id="carousel-track-gerbang-sanchi">
+                                        <div class="vw-carousel-slide">
+                                            <img src="images/sanchi.JPG" alt="Gerbang Sanchi" class="vw-modal-img">
+                                        </div>
+                                        <!-- <div class="vw-carousel-slide">
+                                            <img src="images/watugong-detail.JPG" alt="Watu Gong - Detail Tekstur" class="vw-modal-img">
+                                        </div>
+                                        <div class="vw-carousel-slide">
+                                            <img src="images/watugong-area.JPG" alt="Watu Gong - Area Sekitar" class="vw-modal-img">
+                                        </div> -->
+                                    </div>
+                                    <!-- Navigation Arrows -->
+                                    <!-- <button class="vw-carousel-nav vw-carousel-prev" onclick="prevSlide('gerbang-sanchi')">❮</button>
+                                    <button class="vw-carousel-nav vw-carousel-next" onclick="nextSlide('gerbang-sanchi')">❯</button> -->
+                                </div>
+                                <!-- Image Indicators -->
+                                <!-- <div class="vw-carousel-indicators" id="indicators-gerbang-sanchi">
+                                    <span class="vw-indicator active" onclick="currentSlide('gerbang-sanchi', 1)"></span>
+                                    <span class="vw-indicator" onclick="currentSlide('gerbang-sanchi', 2)"></span>
+                                    <span class="vw-indicator" onclick="currentSlide('gerbang-sanchi', 3)"></span>
+                                </div> -->
                             </div>
                         </div>
-                        <div class="vw-modal-body">
-                            <div class="vw-modal-image-container">
-                                <img src="images/bodhi.jpg" alt="Bodhi" class="vw-modal-img">
-                            </div>
-                            <div class="vw-modal-description">
-                                <p>
-                                   Pohon Bodhi merupakan pohon yang disucikan oleh
-                                   umat Buddha, sebagai obyek puja. Pohon ini merupakan
-                                   pohon cangkokan yang induknya berasal dari
-                                   Anuradhapura, Sri Lanka dan masih keturunan langsung
-                                   dari Pohon Bodhi di Bodhagaya India dimana ini sebagai
-                                   tempat Sidharta Gotama mencapai penerangan
-                                   sempurna atau menjadi Buddha. Di setiap tahunnya
-                                   menjelang peringatan Tri Suci Waisak, para Bhikkhu dan
-                                   samanera beserta umat Buddha melakukan puja bakti
-                                   penggantian kain yang menyelimuti pohon Bodhi.
-                                </p>
-                            </div>
+                        
+                        <!-- Enhanced Description -->
+                        <div class="vw-modal-description">
+                            <p>
+                                Gerbang Sanchi merupakan pintu masuk utama ke Vihara Buddhagaya Watugong. Gerbang ini terdiri dari tiga lorong, masing-masing dihiasi dengan relief bergaya Tiongkok yang melambangkan harmoni budaya.
+                            </p>
+                            
+                            <p>
+                                Desain arsitektur gerbang ini terinspirasi dari Stupa Agung Sanchi yang terkenal di India, sebuah situs yang dianggap sebagai salah satu bangunan batu paling terhormat di negara tersebut dan merupakan Situs Warisan Dunia UNESCO.
+                            </p>
                         </div>
+                    </div>
+                    <div class="vw-modal-footer">
+                        <button class="vw-nav-btn prev" onclick="previousFacility()">
+                            <i>←</i> Sebelumnya
+                        </button>
+                        <button class="vw-nav-btn next" onclick="nextFacility()">
+                            Selanjutnya <i>→</i>
+                        </button>
                     </div>
                 </div>
-                <div id="avalokitesvara-modal" class="vw-modal">
-                    <div class="vw-modal-content">
-                        <span class="vw-close" onclick="closeModal('avalokitesvara')">&times;</span>
-                        <div class="vw-modal-header">
-                            <div class="vw-modal-title">
-                                <span class="vw-modal-number blue">6</span>
-                                <h2>Pagoda Avalokitesvara</h2>
+            </div>
+            <div id="plaza-borobudur-modal" class="vw-modal">
+                <div class="vw-modal-content">
+                    <span class="vw-close" onclick="closeModal('plaza-borobudur')">&times;</span>
+                    <div class="vw-modal-header">
+                        <div class="vw-modal-title">
+                            <span class="vw-modal-number red">3</span>
+                            <h2>Plaza Borobudur</h2>
+                        </div>
+                    </div>
+                    <div class="vw-modal-body">
+                        <!-- Enhanced Image Gallery -->
+                        <div class="vw-modal-image-gallery">
+                            <div class="vw-image-carousel">
+                                <div class="vw-carousel-container">
+                                    <div class="vw-carousel-track" id="carousel-track-plaza-borobudur">
+                                        <div class="vw-carousel-slide">
+                                            <img src="images/plaza-borobudur.png" alt="Plaza Borobudur" class="vw-modal-img">
+                                        </div>
+                                        <!-- <div class="vw-carousel-slide">
+                                            <img src="images/watugong-detail.JPG" alt="Watu Gong - Detail Tekstur" class="vw-modal-img">
+                                        </div>
+                                        <div class="vw-carousel-slide">
+                                            <img src="images/watugong-area.JPG" alt="Watu Gong - Area Sekitar" class="vw-modal-img">
+                                        </div> -->
+                                    </div>
+                                    <!-- Navigation Arrows -->
+                                    <!-- <button class="vw-carousel-nav vw-carousel-prev" onclick="prevSlide('gerbang-sanchi')">❮</button>
+                                    <button class="vw-carousel-nav vw-carousel-next" onclick="nextSlide('gerbang-sanchi')">❯</button> -->
+                                </div>
+                                <!-- Image Indicators -->
+                                <!-- <div class="vw-carousel-indicators" id="indicators-gerbang-sanchi">
+                                    <span class="vw-indicator active" onclick="currentSlide('gerbang-sanchi', 1)"></span>
+                                    <span class="vw-indicator" onclick="currentSlide('gerbang-sanchi', 2)"></span>
+                                    <span class="vw-indicator" onclick="currentSlide('gerbang-sanchi', 3)"></span>
+                                </div> -->
                             </div>
                         </div>
-                        <div class="vw-modal-body">
-                            <div class="vw-modal-image-container">
-                                <img src="images/avalokitesvara.jpg" alt="Avalokitesvara" class="vw-modal-img">
-                            </div>
-                            <div class="vw-modal-description">
-                                <p>
-                                    Pagoda merupakan dengan ciri khas Tiongkok.
-                                    Bangunan ini merupakan bangunan yang paling ikonik
-                                    diantara yang lainnya karena bisa terlihat dari jalan
-                                    raya di sekitararan Banyumanik. Di dalam bangunan ini
-                                    terdapat patung Avalokitesvara atau lebih dikenal
-                                    sebagai Dewi Kwan She Im Po Sat atau Dewi Welas Asri.
-                                    Pagoda dengan tinggi 45 m, bangunan ini diresmikan
-                                    oleh Gubernur Provinsi Jawa Tengah H. Mardiyanto
-                                    pada 14 Juli 2006.
-                                </p>
-                            </div>
+                        
+                        <!-- Enhanced Description -->
+                        <div class="vw-modal-description">
+                            <p>
+                                Plaza Borobudur merupakan area terbuka yang terletak di depan bangunan Dhammasala, yang didesain dengan bentuk mandala Candi Borobudur.
+                            </p>
+                            
+                            <p>
+                                Tata letak simbolis ini mencerminkan perjalanan spiritual yang digambarkan dalam arsitektur Borobudur dari duniawi ke dunia pencerahan yang mewakili jalan bertahap menuju kebangkitan spiritual dalam agama Buddha. Struktur mandala di alun-alun ini tidak hanya bermakna secara estetika tetapi juga bermakna secara spiritual.
+                            </p>
+                            <p>
+                                Struktur ini mencerminkan tiga tingkatan kosmologi Buddha: Kamadhatu (dunia keinginan), Rupadhatu (dunia bentuk), dan Arupadhatu (dunia tanpa bentuk). Pengunjung yang berjalan melalui ruang ini diajak untuk merenungkan perjalanan ini, baik secara fisik maupun metaforis. Plaza Borobudur berfungsi sebagai ruang multifungsi untuk kegiatan keagamaan dan budaya di luar ruangan, seperti perayaan Waisak dan Dhamma walk.
+                            </p>
                         </div>
+                    </div>
+                    <div class="vw-modal-footer">
+                        <button class="vw-nav-btn prev" onclick="previousFacility()">
+                            <i>←</i> Sebelumnya
+                        </button>
+                        <button class="vw-nav-btn next" onclick="nextFacility()">
+                            Selanjutnya <i>→</i>
+                        </button>
                     </div>
                 </div>
-                 <div id="b_parinibbana-modal" class="vw-modal">
-                     <div class="vw-modal-content">
-                         <span class="vw-close" onclick="closeModal('b_parinibbana')">&times;</span>
-                         <div class="vw-modal-header">
-                             <div class="vw-modal-title">
-                                 <span class="vw-modal-number yellow">7</span>
-                                 <h2>Buddha Parinibbana</h2>
-                             </div>
-                         </div>
-                         <div class="vw-modal-body">
-                             <div class="vw-modal-image-container">
-                                 <img src="images/b_parinibbana.jpg" alt="b_parinibbana" class="vw-modal-img">
-                             </div>
-                             <div class="vw-modal-description">
-                                 <p>
-                                     Buddha Parinibbana merupakan sebuah Buddha rupaṁ
-                                     yang menggambarkan saat Sang Buddha Parinibbana
-                                     dibawah dua pohon sala. Parinibbana menggambarkan
-                                     keadaan yang dimasuki setelah kematian oleh seseorang
-                                     yang telah mencapai nirwana selama hidupnya. Ini
-                                     menyiratkan pembebasan dari Saṃsāra, karma dan
-                                     kelahiran kembali.
-                                 </p>
-                             </div>
-                         </div>
-                     </div>
-                 </div>
-                  <div id="b_sivali-modal" class="vw-modal">
-                      <div class="vw-modal-content">
-                          <span class="vw-close" onclick="closeModal('b_sivali')">&times;</span>
-                          <div class="vw-modal-header">
-                              <div class="vw-modal-title">
-                                  <span class="vw-modal-number red">8</span>
-                                  <h2>Bangunan Sivali</h2>
-                              </div>
-                          </div>
-                          <div class="vw-modal-body">
-                              <div class="vw-modal-image-container">
-                                  <img src="images/b_sivali.jpg" alt="b_sivali" class="vw-modal-img">
-                              </div>
-                              <div class="vw-modal-description">
-                                  <p>
-                                      Bangunan Sivali merupakan salah satu tempat untuk
-                                      beribadah bagi Umat Buddha. Nama Sivali sendiri diambil
-                                      dari nama seorang Bhikkhu yang terkenal sebagai
-                                      Seorang Bhikku yang selalu menerima pemberian
-                                      sumbangan makan berjumlah besar. Ia terkenal sebagai
-                                      Bhikkhu Murah Rezeki.
-                                  </p>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-                  <div id="dhammasala-modal" class="vw-modal">
-                      <div class="vw-modal-content">
-                          <span class="vw-close" onclick="closeModal('dhammasala')">&times;</span>
-                          <div class="vw-modal-header">
-                              <div class="vw-modal-title">
-                                  <span class="vw-modal-number red">10</span>
-                                  <h2>Dhammasala</h2>
-                              </div>
-                          </div>
-                          <div class="vw-modal-body">
-                              <div class="vw-modal-image-container">
-                                  <img src="images/dhammasala.jpg" alt="dhammasala" class="vw-modal-img">
-                              </div>
-                              <div class="vw-modal-description">
-                                  <p>
-                                    Bangunan Dhammasala adalah inti dari bangunan
-                                    vihara. Bangunan ini terdiri dari dua lantai, lantai
-                                    pertama merupakan aula yang biasa dipakai oleh
-                                    berbagai kegiatan yang ada di vihara. Sementara itu
-                                    lantai kedua berfungsi sebagai tempat Puja Bakti Umat
-                                    Buddha, Khotbah dhamma, dan Meditasi.
-                                  </p>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-                   <div id="samupadda-modal" class="vw-modal">
-                       <div class="vw-modal-content">
-                           <span class="vw-close" onclick="closeModal('samupadda')">&times;</span>
-                           <div class="vw-modal-header">
-                               <div class="vw-modal-title">
-                                   <span class="vw-modal-number blue">11</span>
-                                   <h2>Relief Patticasamupadda</h2>
-                               </div>
-                           </div>
-                           <div class="vw-modal-body">
-                               <div class="vw-modal-image-container">
-                                   <img src="images/samupadda.jpg" alt="samupadda" class="vw-modal-img">
-                               </div>
-                               <div class="vw-modal-description">
-                                   <p>
-                                       Relief ini berada di lantai dekat pintu masuk
-                                       Dhammasala, relief yang terbuaat dari batu ini berentuk
-                                       bulat dengan diameter 120 cm; Bisa dilihat bahwa ada
-                                       lambang tiga hewan yaitu ayam, ular, dan babi yang
-                                       saling menggigit ekor satu sama lain. Ini menjadi simbol
-                                       dari akar kekotoran batin manusia, yaitu ayam jantan
-                                       (lobha - keserakahan), ular (dosa - kebencian), dan babi
-                                       (moha - kebodohan). Jadi inilah inti dari 12 mata rantai,
-                                       sebab musabab yang saling bergantungan atau disebut
-                                       hukum Patticasamupadda.
-                                   </p>
-                               </div>
-                           </div>
-                       </div>
-                   </div>
-                    <div id="tbm-modal" class="vw-modal">
-                        <div class="vw-modal-content">
-                            <span class="vw-close" onclick="closeModal('tbm')">&times;</span>
-                            <div class="vw-modal-header">
-                                <div class="vw-modal-title">
-                                    <span class="vw-modal-number red">12</span>
-                                    <h2>Taman Baca Masyarakat</h2>
-                                </div>
-                            </div>
-                            <div class="vw-modal-body">
-                                <div class="vw-modal-image-container">
-                                    <img src="images/tbm.png" alt="tbm" class="vw-modal-img">
-                                </div>
-                                <div class="vw-modal-description">
-                                    <p>
-                                        Taman Baca Masyarakat yang berfungsi sebagai
-                                        Kantor Sekretariat Yayasan Buddhagaya, yang terbuka
-                                        untuk umum. Disini terdapat berbagai macam koleksi
-                                        buku bacaan tentang ajaran Buddha dan juga buku
-                                        bacaan secara umum.
-                                    </p>
-                                </div>
-                            </div>
+            </div>
+            <div id="asoka-modal" class="vw-modal">
+                <div class="vw-modal-content">
+                    <span class="vw-close" onclick="closeModal('asoka')">&times;</span>
+                    <div class="vw-modal-header">
+                        <div class="vw-modal-title">
+                            <span class="vw-modal-number white">4</span>
+                            <h2>Tugu dan Prasasti Asoka</h2>
                         </div>
                     </div>
-                    <div id="meditasi-modal" class="vw-modal">
-                        <div class="vw-modal-content">
-                            <span class="vw-close" onclick="closeModal('meditasi')">&times;</span>
-                            <div class="vw-modal-header">
-                                <div class="vw-modal-title">
-                                    <span class="vw-modal-number white">13</span>
-                                    <h2>Kuti Meditasi</h2>
+                    <div class="vw-modal-body">
+                        <!-- Enhanced Image Gallery -->
+                        <div class="vw-modal-image-gallery">
+                            <div class="vw-image-carousel">
+                                <div class="vw-carousel-container">
+                                    <div class="vw-carousel-track" id="carousel-track-asoka">
+                                        <div class="vw-carousel-slide">
+                                            <img src="images/asoka.JPG" alt="Asoka" class="vw-modal-img">
+                                        </div>
+                                        <!-- <div class="vw-carousel-slide">
+                                            <img src="images/watugong-detail.JPG" alt="Watu Gong - Detail Tekstur" class="vw-modal-img">
+                                        </div>
+                                        <div class="vw-carousel-slide">
+                                            <img src="images/watugong-area.JPG" alt="Watu Gong - Area Sekitar" class="vw-modal-img">
+                                        </div> -->
+                                    </div>
+                                    <!-- Navigation Arrows -->
+                                    <!-- <button class="vw-carousel-nav vw-carousel-prev" onclick="prevSlide('gerbang-sanchi')">❮</button>
+                                    <button class="vw-carousel-nav vw-carousel-next" onclick="nextSlide('gerbang-sanchi')">❯</button> -->
                                 </div>
+                                <!-- Image Indicators -->
+                                <!-- <div class="vw-carousel-indicators" id="indicators-gerbang-sanchi">
+                                    <span class="vw-indicator active" onclick="currentSlide('gerbang-sanchi', 1)"></span>
+                                    <span class="vw-indicator" onclick="currentSlide('gerbang-sanchi', 2)"></span>
+                                    <span class="vw-indicator" onclick="currentSlide('gerbang-sanchi', 3)"></span>
+                                </div> -->
                             </div>
-                            <div class="vw-modal-body">
-                                <div class="vw-modal-image-container">
-                                    <img src="images/meditasi.png" alt="meditasi" class="vw-modal-img">
+                        </div>
+                        
+                        <!-- Enhanced Description -->
+                        <div class="vw-modal-description">
+                            <p>Monumen Asoka adalah replika prasasti dekrit Raja Asoka yang tersebar di 34 wilayah di pelosok India, Nepal, Pakistan, dan Afganistan untuk menginformasikan kepada masyarakat tentang program reformasi, dan mendorong masyarakat untuk lebih murah hati, bijaksana, dan bermoral. Salah satu yang paling terkenal adalah tentang toleransi beragama.
+                            </p>
+                            
+                            <p> 
+Relief batu Asoka yang terletak di dekat Gerbang Sanchi merupakan sebuah maklumat kepada masyarakat mengenai toleransi beragama. Bunyinya adalah 'Janganlah kita menghormati agama kita sendiri dengan mencela agama lain. Sebaliknya, agama orang lain juga harus dihormati. Dengan melakukan hal tersebut, kita membantu agama kita sendiri untuk berkembang dan juga memberi manfaat bagi agama-agama lain. Dengan melakukan hal yang sebaliknya, kita akan merugikan agama kita sendiri dan juga merugikan agama orang lain.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="vw-modal-footer">
+                        <button class="vw-nav-btn prev" onclick="previousFacility()">
+                            <i>←</i> Sebelumnya
+                        </button>
+                        <button class="vw-nav-btn next" onclick="nextFacility()">
+                            Selanjutnya <i>→</i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div id="bodhi-modal" class="vw-modal">
+                <div class="vw-modal-content">
+                    <span class="vw-close" onclick="closeModal('bodhi')">&times;</span>
+                    <div class="vw-modal-header">
+                        <div class="vw-modal-title">
+                            <span class="vw-modal-number blue">5</span>
+                            <h2>Pohon Bodhi</h2>
+                        </div>
+                    </div>
+                    <div class="vw-modal-body">
+                        <!-- Enhanced Image Gallery -->
+                        <div class="vw-modal-image-gallery">
+                            <div class="vw-image-carousel">
+                                <div class="vw-carousel-container">
+                                    <div class="vw-carousel-track" id="carousel-track-bodhi">
+                                        <div class="vw-carousel-slide">
+                                            <img src="images/bodhi.jpg" alt="Asoka" class="vw-modal-img">
+                                        </div>
+                                        <!-- <div class="vw-carousel-slide">
+                                            <img src="images/watugong-detail.JPG" alt="Watu Gong - Detail Tekstur" class="vw-modal-img">
+                                        </div>
+                                        <div class="vw-carousel-slide">
+                                            <img src="images/watugong-area.JPG" alt="Watu Gong - Area Sekitar" class="vw-modal-img">
+                                        </div> -->
+                                    </div>
+                                    <!-- Navigation Arrows -->
+                                    <!-- <button class="vw-carousel-nav vw-carousel-prev" onclick="prevSlide('gerbang-sanchi')">❮</button>
+                                    <button class="vw-carousel-nav vw-carousel-next" onclick="nextSlide('gerbang-sanchi')">❯</button> -->
                                 </div>
-                                <div class="vw-modal-description">
-                                    <p>
-                                        Kuti Meditasi merupakan sebuah bangunan yang
-                                        terbuat dari kayu, seperti namanya tempat ini berfungsi
-                                        sebagai area untuk bermeditasi bagi para peserta
-                                        meditasi. Disetiap pintu Kuti terdapat 8 Jalan Kebenaran
-                                        Kebenaran pada ajaran Buddha.
+                                <!-- Image Indicators -->
+                                <!-- <div class="vw-carousel-indicators" id="indicators-gerbang-sanchi">
+                                    <span class="vw-indicator active" onclick="currentSlide('gerbang-sanchi', 1)"></span>
+                                    <span class="vw-indicator" onclick="currentSlide('gerbang-sanchi', 2)"></span>
+                                    <span class="vw-indicator" onclick="currentSlide('gerbang-sanchi', 3)"></span>
+                                </div> -->
+                            </div>
+                        </div>
+                        
+                        <!-- Enhanced Description -->
+                        <div class="vw-modal-description">
+                            <p>Pohon Bodhi adalah simbol yang sangat sakral dalam agama Buddha, yang dipuja sebagai perwujudan hidup dari pencerahan. Pohon ini merupakan objek puja (persembahan kebaktian) dan penghormatan mendalam bagi umat Buddha di seluruh dunia.
+                            </p>
+                            
+                            <p>Pohon yang berdiri di dalam Vihara Buddhagaya Watugong bukanlah sembarang pohon, melainkan pohon Bodhi hasil cangkokan yang induknya berasal dari Anuradhapura, Sri Lanka, sebuah kota yang dikenal sebagai tempat penyimpanan salah satu pohon Bodhi tertua dan tersuci di dunia. Pohon di Anuradhapura ini merupakan keturunan langsung dari Pohon Bodhi asli di Bodhgaya, India, tempat Pangeran Siddharta Gautama bermeditasi dan mencapai pencerahan sempurna, menjadi Buddha lebih dari 2.500 tahun yang lalu.
+                            </p>
 
-                                    </p>
-                                </div>
-                            </div>
+                            <p>Melalui silsilah ini, Pohon Bodhi di Watugong menjadi penghubung yang hidup dengan momen sakral dalam sejarah manusia - sebuah penghubung yang nyata dengan tempat di mana perjalanan menuju pembebasan digenapi.
+                            </p>
                         </div>
                     </div>
-                    <div id="bhikkhu-modal" class="vw-modal">
-                        <div class="vw-modal-content">
-                            <span class="vw-close" onclick="closeModal('bhikkhu')">&times;</span>
-                            <div class="vw-modal-header">
-                                <div class="vw-modal-title">
-                                    <span class="vw-modal-number yellow">14</span>
-                                    <h2>Kuti Bhikkhu</h2>
-                                </div>
-                            </div>
-                            <div class="vw-modal-body">
-                                <div class="vw-modal-image-container">
-                                    <img src="images/bhikku.png" alt="bhikkhu" class="vw-modal-img">
-                                </div>
-                                <div class="vw-modal-description">
-                                    <p>
-                                        Kuti Bhikkhu merupakan bangunan tempat beristirahat
-                                        para Bhikkhu. Biasanya digunakan sebagai tempat
-                                        menginap bila ada Bhikkhu yang sedang berkunjung ke
-                                        vihara. Kuti Bhikkhu tidak boleh dikunjungi oleh
-                                        sembarang orang, Pengunjung hanya diperbolehkan
-                                        melihat bangunan dari luar pagar.
-                                    </p>
-                                </div>
-                            </div>
+                    <div class="vw-modal-footer">
+                        <button class="vw-nav-btn prev" onclick="previousFacility()">
+                            <i>←</i> Sebelumnya
+                        </button>
+                        <button class="vw-nav-btn next" onclick="nextFacility()">
+                            Selanjutnya <i>→</i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div id="avalokitesvara-modal" class="vw-modal">
+                <div class="vw-modal-content">
+                    <span class="vw-close" onclick="closeModal('avalokitesvara')">&times;</span>
+                    <div class="vw-modal-header">
+                        <div class="vw-modal-title">
+                            <span class="vw-modal-number blue">6</span>
+                            <h2>Pagoda Avalokitesvara</h2>
                         </div>
                     </div>
+                    <div class="vw-modal-body">
+                        <!-- Enhanced Image Gallery -->
+                        <div class="vw-modal-image-gallery">
+                            <div class="vw-image-carousel">
+                                <div class="vw-carousel-container">
+                                    <div class="vw-carousel-track" id="carousel-track-avalokitesvara">
+                                        <div class="vw-carousel-slide">
+                                            <img src="images/avalokitesvara.jpg" alt="Avalokitesvara" class="vw-modal-img">
+                                        </div>
+                                        <!-- <div class="vw-carousel-slide">
+                                            <img src="images/watugong-detail.JPG" alt="Watu Gong - Detail Tekstur" class="vw-modal-img">
+                                        </div>
+                                        <div class="vw-carousel-slide">
+                                            <img src="images/watugong-area.JPG" alt="Watu Gong - Area Sekitar" class="vw-modal-img">
+                                        </div> -->
+                                    </div>
+                                    <!-- Navigation Arrows -->
+                                    <!-- <button class="vw-carousel-nav vw-carousel-prev" onclick="prevSlide('gerbang-sanchi')">❮</button>
+                                    <button class="vw-carousel-nav vw-carousel-next" onclick="nextSlide('gerbang-sanchi')">❯</button> -->
+                                </div>
+                                <!-- Image Indicators -->
+                                <!-- <div class="vw-carousel-indicators" id="indicators-gerbang-sanchi">
+                                    <span class="vw-indicator active" onclick="currentSlide('gerbang-sanchi', 1)"></span>
+                                    <span class="vw-indicator" onclick="currentSlide('gerbang-sanchi', 2)"></span>
+                                    <span class="vw-indicator" onclick="currentSlide('gerbang-sanchi', 3)"></span>
+                                </div> -->
+                            </div>
+                        </div>
+                        
+                        <!-- Enhanced Description -->
+                        <div class="vw-modal-description">
+                            <p>Pagoda Avalokitesvara adalah bangunan bergaya stupa yang megah dengan ciri khas arsitektur Tiongkok yang kuat, berdiri sebagai salah satu landmark paling ikonik di Vihara Buddhagaya Watugong. Menjulang setinggi 45 meter, pagoda ini tidak hanya menjadi pagoda tertinggi di Indonesia, namun juga merupakan simbol welas asih, kedamaian, dan peningkatan spiritual.
+                            </p>
+                            
+                            <p>Di jantung pagoda terdapat Ruang Metta Karuna, yang dinamai sesuai dengan dua nilai utama ajaran Buddha: cinta kasih (metta) dan welas asih (karuṇā). Ruang suci ini menyimpan patung Bodhisattva Avalokitesvara, yang juga dihormati sebagai Guan Yin atau Kwan Im Po Sat, Dewi Welas Asih. Patung ini merupakan titik fokus spiritual yang kuat, yang dipercaya oleh para pemujanya untuk memberikan berkah, bimbingan, dan perlindungan kepada semua makhluk yang memujanya dengan niat tulus. 
+                            </p>
+
+                            <p>Secara arsitektur, pagoda ini memadukan pengaruh Cina-Mahayana dengan estetika lokal. Struktur tujuh tingkatnya melambangkan tujuh tingkat pencapaian spiritual, yang secara bertahap naik menuju pembebasan. Setiap tingkat dihiasi dengan ukiran rumit dan patung-patung yang mewakili berbagai Bodhisattva, wali, dan motif teratai, yang semuanya memiliki makna simbolis yang dalam.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="vw-modal-footer">
+                        <button class="vw-nav-btn prev" onclick="previousFacility()">
+                            <i>←</i> Sebelumnya
+                        </button>
+                        <button class="vw-nav-btn next" onclick="nextFacility()">
+                            Selanjutnya <i>→</i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div id="b_parinibbana-modal" class="vw-modal">
+                <div class="vw-modal-content">
+                    <span class="vw-close" onclick="closeModal('b_parinibbana')">&times;</span>
+                    <div class="vw-modal-header">
+                        <div class="vw-modal-title">
+                            <span class="vw-modal-number yellow">7</span>
+                            <h2>Buddha Parinibbana</h2>
+                        </div>
+                    </div>
+                    <div class="vw-modal-body">
+                        <!-- Enhanced Image Gallery -->
+                        <div class="vw-modal-image-gallery">
+                            <div class="vw-image-carousel">
+                                <div class="vw-carousel-container">
+                                    <div class="vw-carousel-track" id="carousel-track-b_parinibbana">
+                                        <div class="vw-carousel-slide">
+                                            <img src="images/b_parinibbana.JPG" alt="Buddha Parinibbana" class="vw-modal-img">
+                                        </div>
+                                        <!-- <div class="vw-carousel-slide">
+                                            <img src="images/watugong-detail.JPG" alt="Watu Gong - Detail Tekstur" class="vw-modal-img">
+                                        </div>
+                                        <div class="vw-carousel-slide">
+                                            <img src="images/watugong-area.JPG" alt="Watu Gong - Area Sekitar" class="vw-modal-img">
+                                        </div> -->
+                                    </div>
+                                    <!-- Navigation Arrows -->
+                                    <!-- <button class="vw-carousel-nav vw-carousel-prev" onclick="prevSlide('gerbang-sanchi')">❮</button>
+                                    <button class="vw-carousel-nav vw-carousel-next" onclick="nextSlide('gerbang-sanchi')">❯</button> -->
+                                </div>
+                                <!-- Image Indicators -->
+                                <!-- <div class="vw-carousel-indicators" id="indicators-gerbang-sanchi">
+                                    <span class="vw-indicator active" onclick="currentSlide('gerbang-sanchi', 1)"></span>
+                                    <span class="vw-indicator" onclick="currentSlide('gerbang-sanchi', 2)"></span>
+                                    <span class="vw-indicator" onclick="currentSlide('gerbang-sanchi', 3)"></span>
+                                </div> -->
+                            </div>
+                        </div>
+                        
+                        <!-- Enhanced Description -->
+                        <div class="vw-modal-description">
+                            <p>Buddha Parinibbana adalah salah satu benda suci yang masih tersisa dari masa awal pembangunan Vihara Buddhagaya Watugong.
+                            </p>
+                            
+                            <p>Patung Buddharupam ini menggambarkan Buddha pada saat terakhirnya di dunia, berbaring miring ke kanan di bawah naungan dua pohon Sala, melambangkan peristiwa Parinibbana, atau Mangkatnya Sang Buddha, yaitu saat Buddha meninggalkan siklus kelahiran kembali dan memasuki pembebasan sempurna (Nibbana).
+                            </p>
+                        </div>
+                    </div>
+                    <div class="vw-modal-footer">
+                        <button class="vw-nav-btn prev" onclick="previousFacility()">
+                            <i>←</i> Sebelumnya
+                        </button>
+                        <button class="vw-nav-btn next" onclick="nextFacility()">
+                            Selanjutnya <i>→</i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div id="b_sivali-modal" class="vw-modal">
+                <div class="vw-modal-content">
+                    <span class="vw-close" onclick="closeModal('b_sivali')">&times;</span>
+                    <div class="vw-modal-header">
+                        <div class="vw-modal-title">
+                            <span class="vw-modal-number red">8</span>
+                            <h2>Bangunan Sivalli</h2>
+                        </div>
+                    </div>
+                    <div class="vw-modal-body">
+                        <!-- Enhanced Image Gallery -->
+                        <div class="vw-modal-image-gallery">
+                            <div class="vw-image-carousel">
+                                <div class="vw-carousel-container">
+                                    <div class="vw-carousel-track" id="carousel-track-b_sivali">
+                                        <div class="vw-carousel-slide">
+                                            <img src="images/b_sivali.jpg" alt="Bangunan Sivali" class="vw-modal-img">
+                                        </div>
+                                        <!-- <div class="vw-carousel-slide">
+                                            <img src="images/watugong-detail.JPG" alt="Watu Gong - Detail Tekstur" class="vw-modal-img">
+                                        </div>
+                                        <div class="vw-carousel-slide">
+                                            <img src="images/watugong-area.JPG" alt="Watu Gong - Area Sekitar" class="vw-modal-img">
+                                        </div> -->
+                                    </div>
+                                    <!-- Navigation Arrows -->
+                                    <!-- <button class="vw-carousel-nav vw-carousel-prev" onclick="prevSlide('gerbang-sanchi')">❮</button>
+                                    <button class="vw-carousel-nav vw-carousel-next" onclick="nextSlide('gerbang-sanchi')">❯</button> -->
+                                </div>
+                                <!-- Image Indicators -->
+                                <!-- <div class="vw-carousel-indicators" id="indicators-gerbang-sanchi">
+                                    <span class="vw-indicator active" onclick="currentSlide('gerbang-sanchi', 1)"></span>
+                                    <span class="vw-indicator" onclick="currentSlide('gerbang-sanchi', 2)"></span>
+                                    <span class="vw-indicator" onclick="currentSlide('gerbang-sanchi', 3)"></span>
+                                </div> -->
+                            </div>
+                        </div>
+                        
+                        <!-- Enhanced Description -->
+                        <div class="vw-modal-description">
+                            <p>Bangunan Sivali merupakan salah satu tempat untuk
+                                beribadah bagi Umat Buddha. Nama Sivali sendiri diambil
+                                dari nama seorang Bhikkhu yang terkenal sebagai
+                                Seorang Bhikku yang selalu menerima pemberian
+                                sumbangan makan berjumlah besar. Ia terkenal sebagai
+                                Bhikkhu Murah Rezeki.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="vw-modal-footer">
+                        <button class="vw-nav-btn prev" onclick="previousFacility()">
+                            <i>←</i> Sebelumnya
+                        </button>
+                        <button class="vw-nav-btn next" onclick="nextFacility()">
+                            Selanjutnya <i>→</i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div id="r_berdiri-modal" class="vw-modal">
+                <div class="vw-modal-content">
+                    <span class="vw-close" onclick="closeModal('r_berdiri')">&times;</span>
+                    <div class="vw-modal-header">
+                        <div class="vw-modal-title">
+                            <span class="vw-modal-number white">9</span>
+                            <h2>Rencana Buddha Berdiri</h2>
+                        </div>
+                    </div>
+                    <div class="vw-modal-body">
+                        <!-- Enhanced Image Gallery -->
+                        <div class="vw-modal-image-gallery">
+                            <div class="vw-image-carousel">
+                                <div class="vw-carousel-container">
+                                    <div class="vw-carousel-track" id="carousel-track-r_berdiri">
+                                        <div class="vw-carousel-slide">
+                                            <img src="images/b_sivali.jpg" alt="Rencana Buddha Berdiri" class="vw-modal-img">
+                                        </div>
+                                        <!-- <div class="vw-carousel-slide">
+                                            <img src="images/watugong-detail.JPG" alt="Watu Gong - Detail Tekstur" class="vw-modal-img">
+                                        </div>
+                                        <div class="vw-carousel-slide">
+                                            <img src="images/watugong-area.JPG" alt="Watu Gong - Area Sekitar" class="vw-modal-img">
+                                        </div> -->
+                                    </div>
+                                    <!-- Navigation Arrows -->
+                                    <!-- <button class="vw-carousel-nav vw-carousel-prev" onclick="prevSlide('gerbang-sanchi')">❮</button>
+                                    <button class="vw-carousel-nav vw-carousel-next" onclick="nextSlide('gerbang-sanchi')">❯</button> -->
+                                </div>
+                                <!-- Image Indicators -->
+                                <!-- <div class="vw-carousel-indicators" id="indicators-gerbang-sanchi">
+                                    <span class="vw-indicator active" onclick="currentSlide('gerbang-sanchi', 1)"></span>
+                                    <span class="vw-indicator" onclick="currentSlide('gerbang-sanchi', 2)"></span>
+                                    <span class="vw-indicator" onclick="currentSlide('gerbang-sanchi', 3)"></span>
+                                </div> -->
+                            </div>
+                        </div>
+                        
+                        <!-- Enhanced Description -->
+                        <div class="vw-modal-description">
+                            <p>Bangunan Sivali merupakan salah satu tempat untuk
+                                beribadah bagi Umat Buddha. Nama Sivali sendiri diambil
+                                dari nama seorang Bhikkhu yang terkenal sebagai
+                                Seorang Bhikku yang selalu menerima pemberian
+                                sumbangan makan berjumlah besar. Ia terkenal sebagai
+                                Bhikkhu Murah Rezeki.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="vw-modal-footer">
+                        <button class="vw-nav-btn prev" onclick="previousFacility()">
+                            <i>←</i> Sebelumnya
+                        </button>
+                        <button class="vw-nav-btn next" onclick="nextFacility()">
+                            Selanjutnya <i>→</i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div id="dhammasala-modal" class="vw-modal">
+                <div class="vw-modal-content">
+                    <span class="vw-close" onclick="closeModal('dhammasala')">&times;</span>
+                    <div class="vw-modal-header">
+                        <div class="vw-modal-title">
+                            <span class="vw-modal-number red">10</span>
+                            <h2>Dhammasala</h2>
+                        </div>
+                    </div>
+                    <div class="vw-modal-body">
+                        <!-- Enhanced Image Gallery -->
+                        <div class="vw-modal-image-gallery">
+                            <div class="vw-image-carousel">
+                                <div class="vw-carousel-container">
+                                    <div class="vw-carousel-track" id="carousel-track-dhammasala">
+                                        <div class="vw-carousel-slide">
+                                            <img src="images/dhammasala.jpg" alt="Rencana Buddha Berdiri" class="vw-modal-img">
+                                        </div>
+                                        <!-- <div class="vw-carousel-slide">
+                                            <img src="images/watugong-detail.JPG" alt="Watu Gong - Detail Tekstur" class="vw-modal-img">
+                                        </div>
+                                        <div class="vw-carousel-slide">
+                                            <img src="images/watugong-area.JPG" alt="Watu Gong - Area Sekitar" class="vw-modal-img">
+                                        </div> -->
+                                    </div>
+                                    <!-- Navigation Arrows -->
+                                    <!-- <button class="vw-carousel-nav vw-carousel-prev" onclick="prevSlide('gerbang-sanchi')">❮</button>
+                                    <button class="vw-carousel-nav vw-carousel-next" onclick="nextSlide('gerbang-sanchi')">❯</button> -->
+                                </div>
+                                <!-- Image Indicators -->
+                                <!-- <div class="vw-carousel-indicators" id="indicators-gerbang-sanchi">
+                                    <span class="vw-indicator active" onclick="currentSlide('gerbang-sanchi', 1)"></span>
+                                    <span class="vw-indicator" onclick="currentSlide('gerbang-sanchi', 2)"></span>
+                                    <span class="vw-indicator" onclick="currentSlide('gerbang-sanchi', 3)"></span>
+                                </div> -->
+                            </div>
+                        </div>
+                        
+                        <!-- Enhanced Description -->
+                        <div class="vw-modal-description">
+                            <p>Dhammasala, bangunan utama biara, adalah titik fokus dari praktik ini. Bangunan ini berfungsi sebagai pusat kegiatan keagamaan dan spiritual yang dilakukan di vihara. Kegiatan-kegiatan ini termasuk puja, upacara pengabdian, sesi meditasi, dan penahbisan hikku dan samanera. Selain itu, vihara ini juga berfungsi sebagai tempat untuk diskusi Dhamma Buddha. Vihara ini merupakan tempat suci dimana para bhikkhu dan umat awam berkumpul untuk meningkatkan pemahaman dan penerapan ajaran Buddha.
+                            </p>
+                            <p>Di dalam Dhammasala, terdapat Buddharupam (patung Buddha) dalam posisi Dhammacakkha Mudra, yang melambangkan momen ketika Buddha pertama kali membabarkan Dhamma. Postur ikonik ini, yang dikenal sebagai "Memutar Roda Dhamma", menandakan dimulainya perjalanan pengajaran Buddha dan merupakan simbol pencerahan dan penyebaran kebijaksanaan yang kuat.</p>
+                            <p>Pada acara-acara penting seperti Waisak atau Kathina, aula ini memiliki peran penting, menjadi titik fokus kegiatan yang ditandai dengan nyanyian, persembahan, dan kontemplasi bersama. Bagi praktisi pemula dan mereka yang tidak memiliki pelatihan formal, aula ini berfungsi sebagai tempat untuk menerima bimbingan, menghadiri khotbah, dan mengajukan pertanyaan untuk menyempurnakan latihan mereka.</p>
+                        </div>
+                    </div>
+                    <div class="vw-modal-footer">
+                        <button class="vw-nav-btn prev" onclick="previousFacility()">
+                            <i>←</i> Sebelumnya
+                        </button>
+                        <button class="vw-nav-btn next" onclick="nextFacility()">
+                            Selanjutnya <i>→</i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div id="samupadda-modal" class="vw-modal">
+                <div class="vw-modal-content">
+                    <span class="vw-close" onclick="closeModal('samupadda')">&times;</span>
+                    <div class="vw-modal-header">
+                        <div class="vw-modal-title">
+                            <span class="vw-modal-number blue">11</span>
+                            <h2>Dhammasala</h2>
+                        </div>
+                    </div>
+                    <div class="vw-modal-body">
+                        <!-- Enhanced Image Gallery -->
+                        <div class="vw-modal-image-gallery">
+                            <div class="vw-image-carousel">
+                                <div class="vw-carousel-container">
+                                    <div class="vw-carousel-track" id="carousel-track-samupadda">
+                                        <div class="vw-carousel-slide">
+                                            <img src="images/samupadda.jpg" alt="Rencana Buddha Berdiri" class="vw-modal-img">
+                                        </div>
+                                        <!-- <div class="vw-carousel-slide">
+                                            <img src="images/watugong-detail.JPG" alt="Watu Gong - Detail Tekstur" class="vw-modal-img">
+                                        </div>
+                                        <div class="vw-carousel-slide">
+                                            <img src="images/watugong-area.JPG" alt="Watu Gong - Area Sekitar" class="vw-modal-img">
+                                        </div> -->
+                                    </div>
+                                    <!-- Navigation Arrows -->
+                                    <!-- <button class="vw-carousel-nav vw-carousel-prev" onclick="prevSlide('gerbang-sanchi')">❮</button>
+                                    <button class="vw-carousel-nav vw-carousel-next" onclick="nextSlide('gerbang-sanchi')">❯</button> -->
+                                </div>
+                                <!-- Image Indicators -->
+                                <!-- <div class="vw-carousel-indicators" id="indicators-gerbang-sanchi">
+                                    <span class="vw-indicator active" onclick="currentSlide('gerbang-sanchi', 1)"></span>
+                                    <span class="vw-indicator" onclick="currentSlide('gerbang-sanchi', 2)"></span>
+                                    <span class="vw-indicator" onclick="currentSlide('gerbang-sanchi', 3)"></span>
+                                </div> -->
+                            </div>
+                        </div>
+                        
+                        <!-- Enhanced Description -->
+                        <div class="vw-modal-description">
+                            <p>Jika berkunjung ke Dhammasala, pengunjung akan menemukan ornamen Tirtana yang melambangkan Buddha, Dhamma, dan Sangha. Simbolisasi ini berfungsi untuk menginformasikan kepada pengunjung tentang Buddha, Dhamma, dan para siswa yang memperkenalkan Tirtana. Tiratana adalah gambar yang mewakili konsep pembelajaran untuk melihat realitas kehidupan yang melekat dengan memeriksa elemen-elemen mendasar yang memunculkan proses kehidupan, yang ditandai dengan pola berulang dan transisi. Relief di lantai pintu masuk Dhammasala, yang tersusun dari batu hijau dan berbentuk melingkar dengan diameter 120 sentimeter, sangat menarik. Relief ini menampilkan tiga serangkai hewan yang saling menggigit ekor satu sama lain, yang merupakan simbol dari sumber mendasar dari kekotoran batin manusia.
+                            </p>
+                            <p>Ciri khas lain dari Dhammasala adalah representasi dari Paticcasamuppāda, atau Asal Mula yang Saling Bergantung, melalui Dua Belas Nidāna (12 mata rantai keberadaan). Relief yang rumit ini tidak hanya berfungsi sebagai elemen dekoratif tetapi juga sebagai instrumen pedagogis, yang berfungsi untuk mengingatkan pengunjung dan praktisi tentang filosofi utama dari ajaran Buddha, bahwa semua fenomena muncul dengan ketergantungan pada fenomena lainnya.</p>
+                            <p>12 Nidāna merupakan sebuah rantai berurutan yang menjelaskan proses samsara, atau dikenal sebagai siklus kelahiran, kematian, dan kelahiran kembali. Setiap mata rantai dalam rantai ini mewakili suatu kondisi yang memunculkan kondisi berikutnya, dengan demikian menggambarkan bagaimana penderitaan terus berlanjut dalam siklus yang terus menerus kecuali seseorang mencapai pandangan terang dan pembebasan sejati.
+                                Dua belas mata rantai tersebut meliputi:
+                                <blockquote>Avijjā (Ketidaktahuan), 2.	Sankhāra (Bentukan-bentukan mental), 3.	Viññāṇa (Kesadaran),  4.	Nāma-rūpa (Nama dan bentuk), 5.	Salāyatana (Enam landasan indera), 6.	Phassa (Kontak), 7. Kundalini (Ketidaktahuan) Vedanā (Perasaan), 8. Tanhā (Nafsu keinginan), 9. Upādāna (Kemelekatan), 10. Bhava (Menjadi), 11. Jāti (Kelahiran),  12. Jarāmaraṇa (Penuaan dan kematian)</blockquote></p>
+                        </div>
+                    </div>
+                    <div class="vw-modal-footer">
+                        <button class="vw-nav-btn prev" onclick="previousFacility()">
+                            <i>←</i> Sebelumnya
+                        </button>
+                        <button class="vw-nav-btn next" onclick="nextFacility()">
+                            Selanjutnya <i>→</i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div id="tbm-modal" class="vw-modal">
+                <div class="vw-modal-content">
+                    <span class="vw-close" onclick="closeModal('tbm')">&times;</span>
+                    <div class="vw-modal-header">
+                        <div class="vw-modal-title">
+                            <span class="vw-modal-number red">12</span>
+                            <h2>Taman Baca Masyarakat</h2>
+                        </div>
+                    </div>
+                    <div class="vw-modal-body">
+                        <!-- Enhanced Image Gallery -->
+                        <div class="vw-modal-image-gallery">
+                            <div class="vw-image-carousel">
+                                <div class="vw-carousel-container">
+                                    <div class="vw-carousel-track" id="carousel-track-tbm">
+                                        <div class="vw-carousel-slide">
+                                            <img src="images/tbm.png" alt="Rencana Buddha Berdiri" class="vw-modal-img">
+                                        </div>
+                                        <!-- <div class="vw-carousel-slide">
+                                            <img src="images/watugong-detail.JPG" alt="Watu Gong - Detail Tekstur" class="vw-modal-img">
+                                        </div>
+                                        <div class="vw-carousel-slide">
+                                            <img src="images/watugong-area.JPG" alt="Watu Gong - Area Sekitar" class="vw-modal-img">
+                                        </div> -->
+                                    </div>
+                                    <!-- Navigation Arrows -->
+                                    <!-- <button class="vw-carousel-nav vw-carousel-prev" onclick="prevSlide('gerbang-sanchi')">❮</button>
+                                    <button class="vw-carousel-nav vw-carousel-next" onclick="nextSlide('gerbang-sanchi')">❯</button> -->
+                                </div>
+                                <!-- Image Indicators -->
+                                <!-- <div class="vw-carousel-indicators" id="indicators-gerbang-sanchi">
+                                    <span class="vw-indicator active" onclick="currentSlide('gerbang-sanchi', 1)"></span>
+                                    <span class="vw-indicator" onclick="currentSlide('gerbang-sanchi', 2)"></span>
+                                    <span class="vw-indicator" onclick="currentSlide('gerbang-sanchi', 3)"></span>
+                                </div> -->
+                            </div>
+                        </div>
+                        
+                        <!-- Enhanced Description -->
+                        <div class="vw-modal-description">
+                            <p>Perpustakaan ini merupakan kantor sekretariat biara dan menyimpan koleksi buku-buku Buddhis dan buku bacaan umum. Perpustakaan ini terbuka bagi pengunjung untuk melihat atau membaca buku-buku yang berkaitan dengan sejarah Buddha.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="vw-modal-footer">
+                        <button class="vw-nav-btn prev" onclick="previousFacility()">
+                            <i>←</i> Sebelumnya
+                        </button>
+                        <button class="vw-nav-btn next" onclick="nextFacility()">
+                            Selanjutnya <i>→</i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div id="meditasi-modal" class="vw-modal">
+                <div class="vw-modal-content">
+                    <span class="vw-close" onclick="closeModal('meditasi')">&times;</span>
+                    <div class="vw-modal-header">
+                        <div class="vw-modal-title">
+                            <span class="vw-modal-number white">13</span>
+                            <h2>Kuti Samadhi</h2>
+                        </div>
+                    </div>
+                    <div class="vw-modal-body">
+                        <!-- Enhanced Image Gallery -->
+                        <div class="vw-modal-image-gallery">
+                            <div class="vw-image-carousel">
+                                <div class="vw-carousel-container">
+                                    <div class="vw-carousel-track" id="carousel-track-meditasi">
+                                        <div class="vw-carousel-slide">
+                                            <img src="images/meditasi.png" alt="Rencana Buddha Berdiri" class="vw-modal-img">
+                                        </div>
+                                        <!-- <div class="vw-carousel-slide">
+                                            <img src="images/watugong-detail.JPG" alt="Watu Gong - Detail Tekstur" class="vw-modal-img">
+                                        </div>
+                                        <div class="vw-carousel-slide">
+                                            <img src="images/watugong-area.JPG" alt="Watu Gong - Area Sekitar" class="vw-modal-img">
+                                        </div> -->
+                                    </div>
+                                    <!-- Navigation Arrows -->
+                                    <!-- <button class="vw-carousel-nav vw-carousel-prev" onclick="prevSlide('gerbang-sanchi')">❮</button>
+                                    <button class="vw-carousel-nav vw-carousel-next" onclick="nextSlide('gerbang-sanchi')">❯</button> -->
+                                </div>
+                                <!-- Image Indicators -->
+                                <!-- <div class="vw-carousel-indicators" id="indicators-gerbang-sanchi">
+                                    <span class="vw-indicator active" onclick="currentSlide('gerbang-sanchi', 1)"></span>
+                                    <span class="vw-indicator" onclick="currentSlide('gerbang-sanchi', 2)"></span>
+                                    <span class="vw-indicator" onclick="currentSlide('gerbang-sanchi', 3)"></span>
+                                </div> -->
+                            </div>
+                        </div>
+                        
+                        <!-- Enhanced Description -->
+                        <div class="vw-modal-description">
+                            <p> Kuti adalah bangunan suci dan sederhana yang terbuat dari kayu ulin, yang dikenal karena kekuatan dan daya tahannya, yang berfungsi terutama sebagai tempat beristirahat dan tidur bagi para bhikkhu dan samanera (bhikkhu pemula). Penggunaan bahan alami yang kokoh seperti kayu ulin tidak hanya praktis untuk penggunaan jangka panjang, tetapi juga mencerminkan nilai-nilai Buddhis tentang kesederhanaan, keberlanjutan, dan keselarasan dengan alam.
+                            </p>
+                            <p>Selain fungsi utamanya sebagai tempat tinggal, kuti juga digunakan oleh umat awam dan peserta retret sebagai ruang untuk meditasi dan kontemplasi pribadi. Desain kuti yang tenang dan minimalis membantu menciptakan suasana yang tenang dan penuh perhatian, bebas dari gangguan. Dengan lingkungan yang tenang, memungkinkan para praktisi untuk fokus ke dalam, memperdalam konsentrasi, dan merenungkan Dhamma.</p>
+                        </div>
+                    </div>
+                    <div class="vw-modal-footer">
+                        <button class="vw-nav-btn prev" onclick="previousFacility()">
+                            <i>←</i> Sebelumnya
+                        </button>
+                        <button class="vw-nav-btn next" onclick="nextFacility()">
+                            Selanjutnya <i>→</i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div id="bhikkhu-modal" class="vw-modal">
+                <div class="vw-modal-content">
+                    <span class="vw-close" onclick="closeModal('bhikkhu')">&times;</span>
+                    <div class="vw-modal-header">
+                        <div class="vw-modal-title">
+                            <span class="vw-modal-number yellow">14</span>
+                            <h2>Kuti Bhikkhu</h2>
+                        </div>
+                    </div>
+                    <div class="vw-modal-body">
+                        <!-- Enhanced Image Gallery -->
+                        <div class="vw-modal-image-gallery">
+                            <div class="vw-image-carousel">
+                                <div class="vw-carousel-container">
+                                    <div class="vw-carousel-track" id="carousel-track-bhikkhu">
+                                        <div class="vw-carousel-slide">
+                                            <img src="images/bhikku.png" alt="Rencana Buddha Berdiri" class="vw-modal-img">
+                                        </div>
+                                        <!-- <div class="vw-carousel-slide">
+                                            <img src="images/watugong-detail.JPG" alt="Watu Gong - Detail Tekstur" class="vw-modal-img">
+                                        </div>
+                                        <div class="vw-carousel-slide">
+                                            <img src="images/watugong-area.JPG" alt="Watu Gong - Area Sekitar" class="vw-modal-img">
+                                        </div> -->
+                                    </div>
+                                    <!-- Navigation Arrows -->
+                                    <!-- <button class="vw-carousel-nav vw-carousel-prev" onclick="prevSlide('gerbang-sanchi')">❮</button>
+                                    <button class="vw-carousel-nav vw-carousel-next" onclick="nextSlide('gerbang-sanchi')">❯</button> -->
+                                </div>
+                                <!-- Image Indicators -->
+                                <!-- <div class="vw-carousel-indicators" id="indicators-gerbang-sanchi">
+                                    <span class="vw-indicator active" onclick="currentSlide('gerbang-sanchi', 1)"></span>
+                                    <span class="vw-indicator" onclick="currentSlide('gerbang-sanchi', 2)"></span>
+                                    <span class="vw-indicator" onclick="currentSlide('gerbang-sanchi', 3)"></span>
+                                </div> -->
+                            </div>
+                        </div>
+                        
+                        <!-- Enhanced Description -->
+                        <div class="vw-modal-description">
+                            <p> Kuti adalah bangunan suci dan sederhana yang terbuat dari kayu ulin, yang dikenal karena kekuatan dan daya tahannya, yang berfungsi terutama sebagai tempat beristirahat dan tidur bagi para bhikkhu dan samanera (bhikkhu pemula). Penggunaan bahan alami yang kokoh seperti kayu ulin tidak hanya praktis untuk penggunaan jangka panjang, tetapi juga mencerminkan nilai-nilai Buddhis tentang kesederhanaan, keberlanjutan, dan keselarasan dengan alam.
+                            </p>
+                            <p>Selain fungsi utamanya sebagai tempat tinggal, kuti juga digunakan oleh umat awam dan peserta retret sebagai ruang untuk meditasi dan kontemplasi pribadi. Desain kuti yang tenang dan minimalis membantu menciptakan suasana yang tenang dan penuh perhatian, bebas dari gangguan. Dengan lingkungan yang tenang, memungkinkan para praktisi untuk fokus ke dalam, memperdalam konsentrasi, dan merenungkan Dhamma.</p>
+                        </div>
+                    </div>
+                    <div class="vw-modal-footer">
+                        <button class="vw-nav-btn prev" onclick="previousFacility()">
+                            <i>←</i> Sebelumnya
+                        </button>
+                        <button class="vw-nav-btn next" onclick="nextFacility()">
+                            Selanjutnya <i>→</i>
+                        </button>
+                    </div>
+                </div>
+            </div>
            </section>
-
             <!-- Kegiatan Section -->
             <section id="kegiatan" class="s-events target-section">
                 <div class="section-header">
-                    <div class="vw-section-header" data-num="03">
+                    <div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                        <div class="wg-section-number">03</div>
+                        <h2 class="wg-pretitle" style="margin-top: -0.8px;">Kegiatan</h2>
+                    </div>
                     <div class="container">
                         <div class="header-content">
-                            <span class="subtitle">Kegiatan</span>
                             <h2 class="title">Program Keagamaan dan Sosial di Vihara Watugong</h2>
                             <p class="description">
                                 Tidak hanya untuk berwisata, vihara juga masih aktif dalam aktivitas keagamaan yang
@@ -1232,6 +2017,133 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+function createViharaParticles() {
+            const particlesContainer = document.getElementById('viharaParticles');
+            const particleCount = 30;
+            const petalCount = 15;
+
+            // Create golden particles
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'vihara-particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 25 + 's';
+                particle.style.animationDuration = (20 + Math.random() * 15) + 's';
+                particlesContainer.appendChild(particle);
+            }
+
+            // Create lotus petals
+            for (let i = 0; i < petalCount; i++) {
+                const petal = document.createElement('div');
+                petal.className = 'vihara-lotus-petal';
+                petal.style.left = Math.random() * 100 + '%';
+                petal.style.animationDelay = Math.random() * 30 + 's';
+                petal.style.animationDuration = (25 + Math.random() * 10) + 's';
+                particlesContainer.appendChild(petal);
+            }
+        }
+function openViharaVideoModal() {
+    const modal = document.getElementById('viharaVideoModal');
+    const iframe = document.getElementById('viharaVideoIframe');
+    const loader = document.getElementById('viharaVideoLoader');
+    
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    
+    // Show loader
+    loader.style.display = 'block';
+    
+    // Load video with autoplay
+    setTimeout(() => {
+        iframe.src = 'https://player.vimeo.com/video/14592941?color=DAA520&title=0&byline=0&portrait=0&autoplay=1';
+        loader.style.display = 'none';
+    }, 500);
+}
+
+function closeViharaVideoModal() {
+    const modal = document.getElementById('viharaVideoModal');
+    const iframe = document.getElementById('viharaVideoIframe');
+    
+    modal.classList.remove('active');
+    document.body.style.overflow = 'auto';
+    
+    // Stop video by removing src
+    setTimeout(() => {
+        iframe.src = '';
+    }, 300);
+}
+
+// Close modal when clicking outside
+document.getElementById('viharaVideoModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeViharaVideoModal();
+    }
+});
+
+// Close modal with Escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeViharaVideoModal();
+    }
+});        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Initialize particles when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            createViharaParticles();
+        });
+
+        // Add parallax effect
+        window.addEventListener('scroll', function() {
+            const particles = document.querySelector('.vihara-particles');
+            const scrolled = window.pageYOffset;
+            const rate = scrolled * -0.3;
+            
+            if (particles) {
+                particles.style.transform = `translateY(${rate}px)`;
+            }
+        });
+
+        // Add hover effects to buttons
+        document.addEventListener('DOMContentLoaded', function() {
+            const primaryBtn = document.querySelector('.s-intro__content-btn');
+            const videoBtn = document.querySelector('.s-intro__content-video-btn');
+            
+            if (primaryBtn) {
+                primaryBtn.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-2px)';
+                    this.style.boxShadow = '0 8px 30px rgba(218, 165, 32, 0.6)';
+                });
+                
+                primaryBtn.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                    this.style.boxShadow = 'none';
+                });
+            }
+            
+            if (videoBtn) {
+                videoBtn.addEventListener('mouseenter', function() {
+                    this.style.transform = 'scale(1.1)';
+                    this.style.boxShadow = '0 0 30px rgba(255, 215, 0, 0.5)';
+                });
+                
+                videoBtn.addEventListener('mouseleave', function() {
+                    this.style.transform = 'scale(1)';
+                    this.style.boxShadow = 'none';
+                });
+            }
+        });
     </script>
 </body>
 

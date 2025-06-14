@@ -2,7 +2,7 @@ const translations = {
     // Navigation menu
     "nav": {
         "id": {
-            "beranda": "Beranda",
+            "intro": "Beranda",
             "sejarah": "Sejarah",
             "fasilitas": "Fasilitas",
             "kegiatan": "Kegiatan",
@@ -10,7 +10,7 @@ const translations = {
             "kontak": "Kontak"
         },
         "en": {
-            "beranda": "Home",
+            "intro": "Beranda",
             "sejarah": "History",
             "fasilitas": "Facilities",
             "kegiatan": "Activities",
